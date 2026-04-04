@@ -1,0 +1,13 @@
+# C build artifacts
+*.o
+*.out
+*.a
+*.so
+*.exe
+
+# Local executables created in this repo
+/practice
+/practice_c/Dynamic_Memory_Allocation/Q1_DMA
+
+# OS files
+.DS_Store
