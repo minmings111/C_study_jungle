@@ -30,6 +30,7 @@ int main(void) {
 
 void sumAndDiff(int a, int b, int* sum, int* diff) {
   // Todo: sum이 가리키는 곳에는 a+b를, diff가 가리키는 곳에는 a-b를 저장하세요.
-  *sum = a + b;
-  *diff = a - b;
+  *sum = a+b;
+  *diff = a-b;
+
 }
