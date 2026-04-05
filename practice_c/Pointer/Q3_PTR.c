@@ -36,31 +36,21 @@ int main(void) {
 }
 
 int* findMaxPtr(int* arr, int n) {
-  // Todo: 포인터 순회로 최댓값 원소의 주소를 찾아 반환하세요. n이 0 이하이면
-  // NULL을 반환하세요.
-  if (n <= 0) return NULL;
-
-  int curr = arr[0];
-  int* currPtr = &arr[0];
-  // 현재 풀이는 인덱스 방식입니다.
-  // arr[i]는 i번째 원소 값, &arr[i]는 그 원소의 주소입니다.
-  // 예: arr = [3, 8, 2, 9, 4] 이면 currPtr은 처음에 &arr[0]을 가리킵니다.
-
-  for (int i = 1; i < n; ++i) {
-    // arr[i]가 더 크면 최댓값과 최댓값 주소를 함께 갱신
-    if (curr < arr[i]) {
-      curr = arr[i];
-      currPtr = &arr[i];
-    }
+  // Todo: 포인터 순회로 최댓값 원소의 주소를 찾아 반환하세요. 
+  
+  // n이 0 이하이면 NULL을 반환하세요.
+  if(n<= 0){
+    return NULL;
   }
 
-  // 포인터 순회 스타일로 쓰면 개념상 아래와 같습니다.
-  // int* ptr = arr;
-  // int* maxPtr = arr;
-  // while (ptr < arr + n) {
-  //   if (*maxPtr < *ptr) maxPtr = ptr;
-  //   ptr++;
-  // }
-  // return maxPtr;
-  return currPtr;
+  int temp = *arr;
+  int idx = 0;
+
+  for(int i = 0; i <n; i++){
+    if(arr[i] > temp){
+      temp = arr[i];
+      idx = i;
+    }
+  }
+  return &arr[idx];
 }
