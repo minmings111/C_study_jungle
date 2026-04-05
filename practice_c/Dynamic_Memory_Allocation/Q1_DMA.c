@@ -28,6 +28,7 @@ int main(void) {
 
 int* allocateInt(int value) {
   // Todo: int 1개를 malloc으로 할당하고 value를 저장한 뒤 그 주소를 반환하세요.
+  // (int*) <= 내가 빌린 이 정체불명의 메모리 공간을 이제부터 '정수 전용 주소'로 사용하겠다!!
   int* temp = (int*)malloc(sizeof(int));
 
   if (temp == NULL) {
