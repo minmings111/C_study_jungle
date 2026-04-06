@@ -20,5 +20,12 @@ int main(void) {
 
 int countChar(const char* str, char target) {
   // Todo: 문자 포인터를 한 칸씩 이동시키며 target과 같은 문자의 개수를 세어 반환하세요.
-  return 0;
+  int i = 0;
+  while(*str != '\0'){
+    if(*str == target){
+      i++;
+    }
+    str++;
+  }
+  return i;
 }
