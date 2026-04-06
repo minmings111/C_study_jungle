@@ -36,12 +36,23 @@ void reverseArray(int* arr, int n) {
   // Todo: left와 right 포인터를 이용해 양 끝 값을 교환하면서 배열을 뒤집으세요.
   int *left = arr; 
   int *right = arr+(n-1);
-  for(int i = 0; i<n; i++){
+  // for(int i = 0; i<n; i++){
+  //   int temp;
+
+  //   temp = *left;
+  //   *left = *right;
+  //   *right = temp;
+  // }
+  
+  while(left < right){
     int temp;
 
     temp = *left;
     *left = *right;
     *right = temp;
+
+    left++;
+    right--;
   }
 
 }
