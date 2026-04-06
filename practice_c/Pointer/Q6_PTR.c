@@ -24,5 +24,11 @@ int main(void) {
 
 int firstMismatchIndex(const int* a, const int* b, int n) {
   // Todo: 두 포인터를 함께 이동시키며 처음 값이 다른 위치의 인덱스를 반환하세요. 모두 같으면 -1을 반환하세요.
+
+  for(int i =0; i<n; i++){
+    if(a[i] != b[i]){
+      return i;
+    }
+  }
   return -1;
 }
