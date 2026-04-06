@@ -34,20 +34,14 @@ int main(void) {
 
 void reverseArray(int* arr, int n) {
   // Todo: left와 right 포인터를 이용해 양 끝 값을 교환하면서 배열을 뒤집으세요.
+  int *left = arr; 
+  int *right = arr+(n-1);
+  for(int i = 0; i<n; i++){
+    int temp;
 
-  int* left = arr;
-  // arr는 첫 원소 주소처럼 동작하므로 left는 &arr[0]과 같습니다.
-  int* right = arr + n - 1;
-  // arr + n - 1 은 마지막 원소 주소, 즉 &arr[n - 1] 입니다.
-  // 예: arr = [1, 2, 3, 4, 5] 이고 n = 5면 right는 5를 가리킵니다.
-  // left++, right-- 는 바이트 1칸이 아니라 int 원소 1칸씩 이동합니다.
-  int* temp;
-
-  while (left != right) {
     temp = *left;
     *left = *right;
     *right = temp;
-    left++;
-    right--;
   }
+
 }
