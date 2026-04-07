@@ -2,7 +2,9 @@
 
 /* CE1007/CZ1007 Data Structures
 Lab Test: Section A - Linked List Questions
-Purpose: Implementing the required functions for Question 3 */
+Purpose: Implementing the required functions for Question 3
+한글 번역:
+목적: 문제 3에서 요구하는 함수를 구현하는 것 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -16,17 +18,20 @@ typedef struct _listnode
 	int item;
 	struct _listnode *next;
 } ListNode;			// You should not change the definition of ListNode
+					// 한글 번역: ListNode의 정의는 변경하면 안 됩니다.
 
 typedef struct _linkedlist
 {
 	int size;
 	ListNode *head;
 } LinkedList;			// You should not change the definition of LinkedList
+					// 한글 번역: LinkedList의 정의는 변경하면 안 됩니다.
 
 
 //////////////////////// function prototypes /////////////////////////////////////
 
 // You should not change the prototype of this function
+// 한글 번역: 이 함수의 프로토타입은 변경하면 안 됩니다.
 void moveOddItemsToBack(LinkedList *ll);
 
 void printList(LinkedList *ll);
@@ -43,6 +48,7 @@ int main()
 	int c, i, j;
 	c = 1;
 	//Initialize the linked list 1 as an empty linked list
+	// 한글 번역: 연결 리스트를 빈 연결 리스트로 초기화
 	ll.head = NULL;
 	ll.size = 0;
 
@@ -67,6 +73,7 @@ int main()
 			break;
 		case 2:
 			moveOddItemsToBack(&ll); // You need to code this function
+								   // 한글 번역: 이 함수는 직접 구현해야 합니다.
 			printf("The resulting linked list after moving odd integers to the back of the linked list is: ");
 			printList(&ll);
 			removeAllItems(&ll);
@@ -87,6 +94,49 @@ int main()
 void moveOddItemsToBack(LinkedList *ll)
 {
 	/* add your code here */
+	/* 한글 번역: 여기에 코드를 작성하세요 */
+	// when ll is Null or ll's node is null or ll's size is 1
+	if(ll == NULL || ll->head == NULL || ll->size == 1){
+		return;
+	}
+	
+	// we need end node!
+	ListNode *tailNode = ll->head;
+	while (tailNode->next != NULL){
+		tailNode = tailNode->next;
+	}
+	
+	ListNode *currNode = ll->head; // check the current
+	ListNode *prevNode = NULL; // when curr is head, prev is NULL!!
+	
+	for(int i = 0; i < ll->size; i++){
+		if(currNode == NULL){break;} // maybe... something wrong... excape
+
+		if(((currNode->item)%2 == 1) && (currNode != tailNode)){ // is odd? - yes!
+			ListNode *tempNode = currNode->next; // don't lose next node idx
+			// move back
+			tailNode->next = currNode;
+			tailNode = currNode;
+			tailNode->next = NULL;
+			
+			// new curr check with tempNode
+			currNode = tempNode; 
+
+			if(prevNode == NULL){ // first node is odd...
+				ll->head = currNode; // connected ll.head with new curr
+			}
+			else{
+				prevNode->next = currNode; // connected prev with new curr
+			}
+			
+		}
+		// not odd!
+		else{
+			prevNode = currNode;
+			currNode = currNode->next;
+		}
+	}
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -154,6 +204,7 @@ int insertNode(LinkedList *ll, int index, int value){
 		return -1;
 
 	// If empty list or inserting first node, need to update head pointer
+	// 한글 번역: 빈 리스트이거나 첫 번째 노드를 삽입하는 경우 head 포인터를 갱신해야 함
 	if (ll->head == NULL || index == 0){
 		cur = ll->head;
 		ll->head = malloc(sizeof(ListNode));
@@ -165,7 +216,9 @@ int insertNode(LinkedList *ll, int index, int value){
 
 
 	// Find the nodes before and at the target position
+	// 한글 번역: 목표 위치의 이전 노드와 해당 위치의 노드를 찾음
 	// Create a new node and reconnect the links
+	// 한글 번역: 새 노드를 만들고 링크를 다시 연결함
 	if ((pre = findNode(ll, index - 1)) != NULL){
 		cur = pre->next;
 		pre->next = malloc(sizeof(ListNode));
@@ -184,10 +237,12 @@ int removeNode(LinkedList *ll, int index){
 	ListNode *pre, *cur;
 
 	// Highest index we can remove is size-1
+	// 한글 번역: 삭제할 수 있는 가장 큰 인덱스는 size-1임
 	if (ll == NULL || index < 0 || index >= ll->size)
 		return -1;
 
 	// If removing first node, need to update head pointer
+	// 한글 번역: 첫 번째 노드를 삭제하는 경우 head 포인터를 갱신해야 함
 	if (index == 0){
 		cur = ll->head->next;
 		free(ll->head);
@@ -198,7 +253,9 @@ int removeNode(LinkedList *ll, int index){
 	}
 
 	// Find the nodes before and after the target position
+	// 한글 번역: 목표 위치의 이전 노드와 이후 노드 관계를 확인함
 	// Free the target node and reconnect the links
+	// 한글 번역: 목표 노드를 해제하고 링크를 다시 연결함
 	if ((pre = findNode(ll, index - 1)) != NULL){
 
 		if (pre->next == NULL)
