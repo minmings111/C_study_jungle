@@ -87,6 +87,65 @@ int main()
 void moveEvenItemsToBack(LinkedList *ll)
 {
 	/* add your code here */
+	/* 빈 리스트면 옮길 노드가 없으므로 바로 종료 */
+	if (ll == NULL || ll->head == NULL){
+		return;
+	}
+
+	ListNode *prevNode = NULL;
+	ListNode *currNode = ll->head;
+	ListNode *evenNode = NULL;
+	ListNode *evenHead = NULL;
+	
+	while (currNode != NULL){
+		/* 홀수 노드는 원래 리스트에 남겨두고 다음 노드로 이동 */
+		if (currNode->item % 2 == 1){
+			prevNode = currNode;
+			currNode = currNode->next;
+		}
+		else{
+			/* 짝수 노드는 먼저 현재 리스트에서 제거한 뒤,
+			   별도로 관리하는 짝수 체인 뒤에 붙인다.
+			   이렇게 하면 temp 포인터 없이도 head 또는 prevNode->next에서
+			   다음에 검사할 노드를 다시 읽어올 수 있다. */
+			if (prevNode == NULL){
+				ll->head = currNode->next;
+			}
+			else{
+				prevNode->next = currNode->next;
+			}
+
+			/* 제거한 짝수 노드를 짝수 체인의 맨 뒤에 연결 */
+			if (evenNode == NULL){
+				evenHead = currNode;
+				evenNode = currNode;
+			}
+			else{
+				evenNode->next = currNode;
+				evenNode = currNode;
+			}
+			evenNode->next = NULL;
+
+			/* currNode는 이미 리스트에서 빠졌으므로,
+			   다음에 볼 노드는 새 head 또는 prevNode->next가 된다. */
+			if (prevNode == NULL){
+				currNode = ll->head;
+			}
+			else{
+				currNode = prevNode->next;
+			}
+		}
+	}
+
+	/* 홀수 리스트 뒤에 짝수 체인을 붙인다.
+	   홀수가 하나도 없었다면 짝수 체인이 전체 리스트가 된다. */
+	if (prevNode != NULL){
+		prevNode->next = evenHead;
+	}
+	else{
+		ll->head = evenHead;
+	}
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
