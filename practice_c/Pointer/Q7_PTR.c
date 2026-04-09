@@ -22,4 +22,7 @@ int main(void) {
 
 void swapIntPointers(int** p1, int** p2) {
   // Todo: 이중 포인터를 사용해 p1과 p2가 가리키는 int* 대상을 서로 교환하세요.
+  int *temp = *p1;
+  *p1 = *p2;
+  *p2 = temp;
 }
