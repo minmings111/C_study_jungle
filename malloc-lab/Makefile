@@ -1,6 +1,7 @@
 #
 # Students' Makefile for the Malloc Lab
 #
+# 학생용 Malloc Lab Makefile
 TEAM = bovik
 VERSION = 1
 HANDINDIR = /afs/cs.cmu.edu/academic/class/15213-f01/malloclab/handin
@@ -26,5 +27,4 @@ handin:
 
 clean:
 	rm -f *~ *.o mdriver
-
 
