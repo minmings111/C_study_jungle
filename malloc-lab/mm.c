@@ -222,21 +222,37 @@ static void *coalesce(void *bp){
 
 }
 
+// first_fit
+// void * find_fit(size_t asize){
+//    void* bp = heap_listp;
+//    while(GET_SIZE(HDRP(bp)) != 0){ // 에필로그 블록(사이즈 0)을 만나면 중단
+//       // 크기 검토, 사용가능 여부 검토
+//       if(asize <= GET_SIZE(HDRP(bp)) && GET_ALLOC(HDRP(bp)) == 0){
+//          return bp;
+//       }
+//       else{
+//          bp = NEXT_BLKP(bp); // 다음 블록으로
+//       }
+//    }
+//    return NULL; // 프리 블록 없음
+// }
+
+// best_fit
 void * find_fit(size_t asize){
    void* bp = heap_listp;
-   while(GET_SIZE(HDRP(bp)) != 0){ // 에필로그 블록(사이즈 0)을 만나면 중단
-      // 크기 검토, 사용가능 여부 검토
+   void* best_bp = NULL; // best_bp를 찾으면 담아둘 변수
+   // 블록영역 무조건 1회 순회
+   for(bp; GET_SIZE(HDRP(bp)) >0; bp = NEXT_BLKP(bp)){
+      // 크기, 사용 가능 여부 체크
       if(asize <= GET_SIZE(HDRP(bp)) && GET_ALLOC(HDRP(bp)) == 0){
-         return bp;
-      }
-      else{
-         bp = NEXT_BLKP(bp); // 다음 블록으로
+         // best_bp 갱신
+         if(best_bp == NULL || (GET_SIZE(HDRP(bp)) < GET_SIZE(HDRP(best_bp)))){
+            best_bp = bp;
+         }
       }
    }
-   return NULL; // 프리 블록 없음
+   return best_bp;
 }
-
-
 
 /* 
  * mm_malloc - Allocate a block by incrementing the brk pointer.
@@ -257,7 +273,7 @@ void *mm_malloc(size_t size){
    //요구하는 페이로드 크기(size)가 최소 단위(DSIZE)보다 작을 때 
    if(size <= DSIZE)
       asize = 2*DSIZE; //헤더푸터DSIZE + 페이로드 최소 크기 DSIZE
-    //size가 최소단위
+   //size가 최소단위
    else
       // (size + DSIZE + (DSIZE-1))
       asize = ALIGN(size + DSIZE);
