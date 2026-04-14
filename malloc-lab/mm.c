@@ -105,11 +105,11 @@ team_t team = {
 
 
 // 변수 및 함수 원형 선언
-char * heap_listp;
+static char * heap_listp;
 static void *extend_heap(size_t words);
 static void *coalesce(void *bp);
 static void * find_fit(size_t asize);
-void place(void *bp, size_t asize);
+static void place(void *bp, size_t asize);
 
 /* 
  * mm_init - initialize the malloc package.
@@ -278,7 +278,7 @@ void *mm_malloc(size_t size){
 
 
 // free block에 배치(필요하면 분할!!)
-void place(void *bp, size_t asize){ // asize는 조정된 블록 크기
+static void place(void *bp, size_t asize){ // asize는 조정된 블록 크기
    // csize는 현재 작업할 대상인 free block의 크기
    size_t csize = GET_SIZE(HDRP(bp));
 
