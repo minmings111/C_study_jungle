@@ -329,29 +329,32 @@ void mm_free(void *ptr)
  * mm_realloc - mm_malloc과 mm_free를 이용해 단순하게 구현한다.
  */
 void *mm_realloc(void *ptr, size_t size)
-{
-    if(ptr == NULL)
-        return mm_malloc(size);
+{  
+   // ptr이 NULL이면 malloc처럼 처리
+   if(ptr == NULL) 
+      return mm_malloc(size);
+   // size가 0이면 free 후 NULL 반환
+   if(size == 0){ 
+      mm_free(ptr);
+      return NULL;
+   }
 
-    if(size == 0){
-        mm_free(ptr);
+   void *oldptr = ptr; // 기존 블록
+   void *newptr; // 새 블록
+   size_t copySize; // 복사할 크기
+
+   newptr = mm_malloc(size); // 새 블록 할당
+   // 할당 실패 시 종료
+   if (newptr == NULL)
         return NULL;
-    }
 
-    void *oldptr = ptr;
-    void *newptr;
-    size_t copySize;
-
-    newptr = mm_malloc(size);
-    if (newptr == NULL)
-        return NULL;
-
-    copySize = GET_SIZE(HDRP(oldptr)) - DSIZE;
-
-    if (size < copySize)
+   // 기존 payload 크기 계산
+   copySize = GET_SIZE(HDRP(oldptr)) - DSIZE;
+   // 더 작은 크기만 복사
+   if (size < copySize)
         copySize = size;
 
-    memcpy(newptr, oldptr, copySize);
-    mm_free(oldptr);
-    return newptr;
+   memcpy(newptr, oldptr, copySize); // 데이터 복사
+   mm_free(oldptr); // 기존 블록 해제
+   return newptr; // 새 포인터 반환
 }
