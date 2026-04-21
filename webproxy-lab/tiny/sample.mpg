@@ -1,0 +1,3 @@
+This is a placeholder MPEG sample file for Tiny static GET testing.
+It is useful for checking file existence and the video/mpeg Content-type header.
+It is not a real playable MPEG video stream.
