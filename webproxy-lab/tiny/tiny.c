@@ -96,7 +96,8 @@ void doit(int fd){
 
   // 이 연결 fd로부터 버퍼 기반 입력을 읽을 수 있게 rio를 초기화한다.
   Rio_readinitb(&rio, fd);
-  // 요청의 첫 줄(Request-Line)을 읽는다. 예: GET /home.html HTTP/1.0
+  // 요청의 첫 줄(Request-Line) 전체를 소켓에서 읽어서 buf에 그대로 저장한다.
+  // 예를 들면 buf에는 "GET /home.html HTTP/1.0" 같은 한 줄 전체가 들어간다.
   Rio_readlineb(&rio, buf, MAXLINE);
   
   // 이제부터 요청 내용 출력이 시작됨을 알려 준다.
@@ -104,7 +105,10 @@ void doit(int fd){
   // 방금 읽은 요청 첫 줄을 서버 터미널에 출력한다.
   printf("%s", buf);
   
-  // 요청 첫 줄에서 메서드, URI, HTTP 버전을 각각 분리해 저장한다.
+  // buf 안에 들어 있는 "한 줄 전체 문자열"을 공백 기준으로 잘라서
+  // method, uri, version 세 변수에 각각 나눠 담는다.
+  // 즉 Rio_readlineb는 원본 한 줄을 읽는 단계이고,
+  // sscanf는 그 원본 한 줄을 의미 단위로 분해하는 단계이다.
   sscanf(buf, "%s %s %s", method, uri, version);
   
   // Tiny는 GET만 구현하므로 다른 메서드면 501 에러를 보낸다.
@@ -421,6 +425,10 @@ void get_filetype(char *filename, char *filetype){
   // JPG 확장자면 JPG 이미지 타입으로 지정한다.
   else if(strstr(filename, ".jpg")){
     strcpy(filetype, "image/jpg");
+  }
+  // MPG 확장자면 MPG 비디오 타입으로 지정
+  else if(strstr(filename, ".mpg") || strstr(filename, ".mpeg")){
+    strcpy(filetype, "video/mpeg");
   }
   // 위에 해당하지 않으면 일반 텍스트로 간주한다.
   else{
