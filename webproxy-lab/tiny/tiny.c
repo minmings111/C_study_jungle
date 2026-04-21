@@ -426,6 +426,10 @@ void get_filetype(char *filename, char *filetype){
   else if(strstr(filename, ".mpg") || strstr(filename, ".mpeg")){
     strcpy(filetype, "video/mpeg");
   }
+  // MPG 확장자면 MPG 비디오 타입으로 지정
+  else if(strstr(filename, ".mp4")){
+    strcpy(filetype, "video/mp4");
+  }
   // 위에 해당하지 않으면 일반 텍스트로 간주한다.
   else{
     strcpy(filetype, "text/plain");
