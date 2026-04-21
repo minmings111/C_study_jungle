@@ -191,16 +191,14 @@ void clienterror(int fd, char *cause, char *errnum, char *shortmsg, char *longms
   char buf[MAXLINE], body[MAXBUF]; // buf: HTTP 응답 헤더 한 줄을 만드는 버퍼, body: 클라이언트에게 보낼 HTML 에러 본문 전체
 
   // build the http response body / HTTP 응답 본문을 만든다
-  // HTML 문서의 시작 부분과 제목을 만든다.
-  sprintf(body, "<html><title> Tiny Error </title>");
-  // 본문 배경색과 body 태그를 이어 붙인다.
-  sprintf(body, "%s <body bgcolor = ""ffffff""> \r\n", body);
-  // 상태 코드와 짧은 에러 메시지를 본문에 넣는다.
-  sprintf(body, "%s%s: %s \r\n", body, errnum, shortmsg);
-  // 더 자세한 설명과 원인이 된 대상을 본문에 넣는다.
-  sprintf(body, "%s<p>%s : %s\r\n", body, longmsg, cause);
-  // 서버 서명을 덧붙여 에러 페이지를 마무리한다.
-  sprintf(body, "%s<hr><em> The Tiny Web Server</em>\r\n", body);
+  // HTML 에러 본문 전체를 한 번에 안전하게 만든다.
+  snprintf(body, sizeof(body),
+           "<html><title> Tiny Error </title>"
+           " <body bgcolor = \"ffffff\"> \r\n"
+           "%s: %s \r\n"
+           "<p>%s : %s\r\n"
+           "<hr><em> The Tiny Web Server</em>\r\n",
+           errnum, shortmsg, longmsg, cause);
 
   // print the http response / HTTP 응답을 클라이언트에게 보낸다
   // 상태 줄을 먼저 전송한다. 예: HTTP/1.0 404 Not found
@@ -357,16 +355,14 @@ void serve_static(int fd, char *filename, int filesize){
 
   // 파일 이름 확장자를 보고 MIME 타입을 결정한다.
   get_filetype(filename, filetype);
-  // 상태 줄을 작성한다.
-  sprintf(buf, "HTTP/1.0 200 OK\r\n");
-  // 서버 이름 헤더를 덧붙인다.
-  sprintf(buf, "%sServer: Tiny Web Server\r\n", buf);
-  // 이 응답 후 연결을 닫는다는 헤더를 덧붙인다.
-  sprintf(buf, "%sConnection: close\r\n", buf);
-  // 본문 길이를 Content-length에 기록한다.
-  sprintf(buf, "%sContent-length: %d\r\n", buf, filesize);
-  // 파일 형식에 맞는 Content-type을 넣고 빈 줄로 헤더를 끝낸다.
-  sprintf(buf, "%sContent-type: %s\r\n\r\n", buf, filetype);
+  // 상태 줄과 주요 헤더를 한 번에 안전하게 만든다.
+  snprintf(buf, sizeof(buf),
+           "HTTP/1.0 200 OK\r\n"
+           "Server: Tiny Web Server\r\n"
+           "Connection: close\r\n"
+           "Content-length: %d\r\n"
+           "Content-type: %s\r\n\r\n",
+           filesize, filetype);
   
   // 완성한 응답 헤더를 클라이언트에게 보낸다.
   Rio_writen(fd, buf, strlen(buf));

@@ -31,16 +31,14 @@ int main(void) {
   }
 
   //make the response body
-  // 처음에는 QUERY_STRING 내용을 본문에 넣으려 하지만, 바로 다음 줄에서 덮어쓴다.
-  sprintf(content, "QUERY_STRING=%s", buf);
-  // 응답 본문의 첫 문장을 만든다.
-  sprintf(content, "Welcom to add.com: ");
-  // 소개 문장을 뒤에 이어 붙인다.
-  sprintf(content, "%sThe Internet addition partal.\r\n<p>", content);
-  // 두 수의 합 계산 결과를 본문에 이어 붙인다.
-  sprintf(content, "%sThe answer is: %d + %d = %d\r\n<p>", content, n1, n2, n1+n2);
-  // 마지막 인사 문장을 붙여 본문 작성을 마무리한다.
-  sprintf(content, "%sThanks for visiting!\r\n", content);
+  // 응답 본문 전체를 한 번에 안전하게 만든다.
+  snprintf(content, sizeof(content),
+           "QUERY_STRING=%s\r\n"
+           "Welcom to add.com: "
+           "The Internet addition partal.\r\n<p>"
+           "The answer is: %d + %d = %d\r\n<p>"
+           "Thanks for visiting!\r\n",
+           buf, n1, n2, n1+n2);
 
   // generate the http response
   // 응답 후 연결을 닫겠다는 헤더를 출력한다.
