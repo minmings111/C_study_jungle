@@ -24,10 +24,10 @@ int main(void) {
     strcpy(arg1, buf);
     // '&' 다음 문자열을 두 번째 숫자 문자열로 복사한다.
     strcpy(arg2, p+1);
-    // 첫 번째 숫자 문자열을 정수로 변환한다.
-    n1 = atoi(arg1);
-    // 두 번째 숫자 문자열을 정수로 변환한다.
-    n2 = atoi(arg2);
+    // 첫 번째 숫자 문자열을 정수로 변환한다. + "num1="의 길이만큼 건너뛰기
+    n1 = atoi(arg1+5);
+    // 두 번째 숫자 문자열을 정수로 변환한다. + "num2="의 길이만큼 건너뛰기
+    n2 = atoi(arg2+5);
   }
 
   //make the response body
