@@ -351,7 +351,8 @@ int parse_uri(char *uri, char *filename, char *cgiargs){
 */
 void serve_static(int fd, char *filename, int filesize){
   int srcfd; // 정적 파일을 열었을 때 돌려받는 파일 디스크립터
-  char *srcp, filetype[MAXLINE], buf[MAXBUF]; // srcp: mmap으로 매핑된 파일 내용의 시작 주소, filetype: Content-type 문자열, buf: 응답 헤더를 조합하는 버퍼
+  // char *srcp, //가보자고를 위한 주석처리. mmap을 안 쓰니까 사용되지 않는 변수임
+  char filetype[MAXLINE], buf[MAXBUF]; // srcp: mmap으로 매핑된 파일 내용의 시작 주소, filetype: Content-type 문자열, buf: 응답 헤더를 조합하는 버퍼
 
   // 파일 이름 확장자를 보고 MIME 타입을 결정한다.
   get_filetype(filename, filetype);
@@ -372,16 +373,47 @@ void serve_static(int fd, char *filename, int filesize){
 
   // 요청된 정적 파일을 읽기 전용으로 연다.
   srcfd = Open(filename, O_RDONLY, 0);
+
+  /* 이거 말고 malloc, rio_readn, rio_writen을 사용해봅시다.
   // 파일 전체를 메모리에 매핑해 한 번에 전송하기 쉽게 만든다.
   srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0);
+  */
+
+  // 가보자고
+  char* filebuf = malloc(MAXBUF);
+  if(filebuf == NULL){ // 혹시 malloc이 실패한다면..
+    unix_error("malloc error");
+  }
+
+  while(1){
+    ssize_t n = rio_readn(srcfd, filebuf, MAXBUF);
+    if(n == 0){
+      break;
+    }
+    else if (n == -1)
+    {
+      unix_error("rio_readn error");
+    }
+    
+    Rio_writen(fd, filebuf, n);
+
+  }
+  free(filebuf);
+  // 가보자고 끝
+
+
 
   // mmap이 끝났으므로 파일 디스크립터는 닫아도 된다.
   Close(srcfd);
 
+  /* 가보자고를 위한 주석 처리
   // 매핑된 파일 내용을 응답 본문으로 클라이언트에게 전송한다.
-  Rio_writen(fd, srcp, filesize);
+  Rio_writen(fd, srcp, filesize); 
   // 전송이 끝났으니 매핑한 메모리를 해제한다.
   Munmap(srcp, filesize);
+  */
+
+
 }
 
 /*
